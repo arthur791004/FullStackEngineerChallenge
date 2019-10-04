@@ -9,11 +9,13 @@ const config = {
   },
   test: {
     dialect: 'sqlite',
-    storage: ':memory',
+    storage: path.resolve(base, 'test.sqlite3'),
+    logging: false,
   },
   production: {
     dialect: 'sqlite',
     storage: path.resolve(base, 'prod.sqlite3'),
+    logging: false,
   },
 };
 

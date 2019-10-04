@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const salt = bcrypt.genSaltSync();
+
 const users = Array.from({ length: 10 }, (_, i) => {
   const name = `user${i}`;
 
