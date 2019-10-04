@@ -4,3 +4,7 @@ yarn-error.log
 build
 coverage
 .vscode
+.local
+
+# sqlite
+*.sqlite3

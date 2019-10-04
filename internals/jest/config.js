@@ -11,6 +11,9 @@ const config = {
     '^.+\\.js$': 'babel-jest',
   },
   testRegex: '__tests__/.*\\.test\\.js$',
+  globalSetup: '<rootDir>/internals/jest/globalSetup.js',
+  globalTeardown: '<rootDir>/internals/jest/globalTeardown.js',
+  setupFiles: ['<rootDir>/internals/jest/setup.js'],
 };
 
 module.exports = config;

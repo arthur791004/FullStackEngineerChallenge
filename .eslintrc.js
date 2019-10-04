@@ -19,7 +19,11 @@ const config = {
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: ['internals/**/*.js', 'client/**/stories.js'],
+        devDependencies: [
+          'internals/**/*.js',
+          'client/**/stories.js',
+          '**/__tests__/*.test.js',
+        ],
       },
     ],
     'import/prefer-default-export': 0,
