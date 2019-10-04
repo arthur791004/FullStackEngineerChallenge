@@ -11,7 +11,7 @@ const secureUser = user => {
 };
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Users extends Model {
     get(...args) {
       const user = super.get(...args);
 
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  User.init(
+  Users.init(
     {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
@@ -44,5 +44,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return User;
+  return Users;
 };

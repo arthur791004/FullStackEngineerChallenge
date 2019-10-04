@@ -62,10 +62,10 @@ const getCookieByUser = async user => {
  */
 beforeAll(async () => {
   await db.sequelize.sync();
-  await db.User.destroy({ truncate: true });
+  await db.Users.destroy({ truncate: true });
 
-  userIds.admin = (await db.User.create(adminUser)).get('id');
-  userIds.normal = (await db.User.create(normalUser)).get('id');
+  userIds.admin = (await db.Users.create(adminUser)).get('id');
+  userIds.normal = (await db.Users.create(normalUser)).get('id');
 
   cookies.admin = await getCookieByUser(adminUser);
   cookies.normal = await getCookieByUser(normalUser);
@@ -162,11 +162,11 @@ describe('update a user by id', () => {
   let userId = null;
 
   beforeAll(async () => {
-    userId = (await db.User.create(user)).get('id');
+    userId = (await db.Users.create(user)).get('id');
   });
 
   afterAll(async () => {
-    await db.User.destroy({ where: { id: userId } });
+    await db.Users.destroy({ where: { id: userId } });
   });
 
   it('should succeed with admin user', async () => {
@@ -204,7 +204,7 @@ describe('delete a user by id', () => {
   let userId = null;
 
   beforeAll(async () => {
-    userId = (await db.User.create(user)).get('id');
+    userId = (await db.Users.create(user)).get('id');
   });
 
   it('should succeed with admin user', async () => {

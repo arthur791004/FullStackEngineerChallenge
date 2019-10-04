@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../constants/errors');
 const { ROLES } = require('../constants/users');
-const { User } = require('../db/models');
+const { Users } = require('../db/models');
 const adminPermission = require('../middlewares/permission/admin');
 
 const router = Router();
@@ -18,7 +18,7 @@ router.post('/login', (req, res, next) => {
   // delete user from session
   delete req.session.user;
 
-  return User.findOne({ where })
+  return Users.findOne({ where })
     .then(user => {
       if (!user.checkPassword(password)) {
         return next({
@@ -51,7 +51,7 @@ router.post('/logout', (req, res) => {
  * Get all users
  */
 router.get('/', (req, res, next) => {
-  return User.findAll()
+  return Users.findAll()
     .then(users => users.map(user => user.get()))
     .then(users => res.json({ data: users }))
     .catch(error => next({ message: error.message }));
@@ -66,7 +66,7 @@ router.get('/', (req, res, next) => {
 router.post('/', adminPermission, (req, res, next) => {
   const { email, password, role = ROLES.NORMAL } = req.body;
 
-  return User.create({ email, password, role })
+  return Users.create({ email, password, role })
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
 });
@@ -78,7 +78,7 @@ router.post('/', adminPermission, (req, res, next) => {
 router.get('/:userId', (req, res, next) => {
   const { userId } = req.params;
 
-  return User.findByPk(userId)
+  return Users.findByPk(userId)
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
 });
@@ -100,7 +100,7 @@ router.patch('/:userId', adminPermission, (req, res, next) => {
     return user;
   }, {});
 
-  return User.findByPk(userId)
+  return Users.findByPk(userId)
     .then(user => user.update(updatedUser))
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
@@ -113,7 +113,7 @@ router.patch('/:userId', adminPermission, (req, res, next) => {
 router.delete('/:userId', adminPermission, (req, res, next) => {
   const { userId } = req.params;
 
-  return User.findByPk(userId)
+  return Users.findByPk(userId)
     .then(user => user.destroy())
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
