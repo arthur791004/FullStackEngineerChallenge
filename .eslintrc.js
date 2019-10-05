@@ -16,6 +16,7 @@ const config = {
   },
   plugins: ['react', 'react-hooks'],
   rules: {
+    'global-require': 0,
     'import/no-extraneous-dependencies': [
       'error',
       {
@@ -27,7 +28,9 @@ const config = {
       },
     ],
     'import/prefer-default-export': 0,
+    'no-continue': 0,
     'no-else-return': 0,
+    'no-plusplus': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/jsx-wrap-multilines': [
       'error',

@@ -9,7 +9,8 @@ const permission = (...validators) => (req, res, next) => {
     return next({ code: ERROR_CODES.UNAUTHORIZED });
   }
 
-  const passed = validators.some(validator => validator(req));
+  const passed =
+    validators.length === 0 || validators.some(validator => validator(req));
   if (!passed) {
     return next({
       code: ERROR_CODES.FORBIDDEN,
