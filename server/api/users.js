@@ -20,7 +20,7 @@ router.post('/login', (req, res, next) => {
 
   return Users.findOne({ where })
     .then(user => {
-      if (!user.checkPassword(password)) {
+      if (!(user && user.checkPassword(password))) {
         return next({
           code: ERROR_CODES.UNAUTHORIZED,
           message: ERROR_MESSAGES.LOGIN_FAILED,

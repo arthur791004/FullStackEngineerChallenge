@@ -3,9 +3,8 @@ module.exports = {
     return queryInterface.createTable('Users', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUIDV4,
       },
       email: {
         allowNull: false,
@@ -23,11 +22,11 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: 'TIMESTAMP',
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: 'TIMESTAMP',
       },
     });
   },

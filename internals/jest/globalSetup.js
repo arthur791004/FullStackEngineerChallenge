@@ -1,3 +1,6 @@
-module.exports = () => {
-  require('../../server'); // eslint-disable-line global-require
+module.exports = async () => {
+  /**
+   * Start server for api test
+   */
+  require('../../server');
 };

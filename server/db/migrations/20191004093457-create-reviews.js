@@ -7,37 +7,37 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      reviewerId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
-      },
       revieweeId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUIDV4,
         references: {
           model: 'Users',
           key: 'id',
         },
+        onDelete: 'cascade',
       },
-      feedback: {
+      reviewerId: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUIDV4,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'cascade',
       },
-      rate: {
-        allowNull: false,
+      rating: {
         type: Sequelize.INTEGER,
+      },
+      content: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: 'TIMESTAMP',
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: 'TIMESTAMP',
       },
     });
   },

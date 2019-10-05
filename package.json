@@ -12,7 +12,7 @@
     "prebuild": "yarn run build:clean",
     "build": "cross-env NODE_ENV=production webpack --config ./internals/webpack/prod.config.js",
     "build:clean": "rimraf ./build",
-    "test": "cross-env NODE_ENV=test jest --config ./internals/jest/config.js --passWithNoTests",
+    "test": "cross-env NODE_ENV=test jest --config ./internals/jest/config.js --passWithNoTests --runInBand",
     "test:coverage": "yarn run test --coverage",
     "test:watch": "yarn run test --watch",
     "lint": "yarn run lint-eslint .",
@@ -41,6 +41,7 @@
     "react-router-dom": "~5.0.1",
     "sequelize": "~5.19.2",
     "styled-components": "~4.3.2",
+    "uuid": "~3.3.3",
     "webpack-hot-middleware": "~2.25.0"
   },
   "devDependencies": {

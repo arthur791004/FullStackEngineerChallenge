@@ -1,22 +1,13 @@
-const bcrypt = require('bcrypt');
-
-const salt = bcrypt.genSaltSync();
-
-const users = Array.from({ length: 10 }, (_, i) => {
-  const name = `user${i}`;
-
-  return {
-    email: `${name}@paypay.com`,
-    password: bcrypt.hashSync(name, salt),
-    role: i % 2,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-});
+const secureUser = require('../utils/secureUser');
+const admin = require('../mockData/admin');
+const users = require('../mockData/users');
 
 module.exports = {
   up: queryInterface => {
-    return queryInterface.bulkInsert('Users', users);
+    return queryInterface.bulkInsert(
+      'Users',
+      [admin, ...users].map(user => secureUser(user))
+    );
   },
 
   down: queryInterface => {

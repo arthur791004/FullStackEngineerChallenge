@@ -1,17 +1,9 @@
-const { Model } = require('sequelize');
+const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
-
-const secureUser = user => {
-  const { password } = user;
-  if (!password) {
-    return;
-  }
-
-  user.password = bcrypt.hashSync(password, bcrypt.genSaltSync()); // eslint-disable-line no-param-reassign
-};
+const secureUser = require('../utils/secureUser');
 
 module.exports = (sequelize, DataTypes) => {
-  class Users extends Model {
+  class Users extends Sequelize.Model {
     get(...args) {
       const user = super.get(...args);
 
@@ -30,27 +22,25 @@ module.exports = (sequelize, DataTypes) => {
 
   Users.init(
     {
+      id: {
+        type: DataTypes.UUIDV4,
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV4,
+      },
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       role: DataTypes.INTEGER,
+      createdAt: 'TIMESTAMP',
+      updatedAt: 'TIMESTAMP',
     },
     {
       sequelize,
       hooks: {
-        beforeSave: user => {
-          secureUser(user);
-        },
+        beforeBulkCreate: users => users.map(user => secureUser(user)),
+        beforeSave: user => secureUser(user),
       },
     }
   );
-
-  Users.associate = models => {
-    Users.hasMany(models.Reviews, { foreignKey: 'reviewerId', as: 'reviews' });
-    Users.belongToMany(models.Reviews, {
-      foreignKey: 'revieweeId',
-      as: 'feedbacks',
-    });
-  };
 
   return Users;
 };

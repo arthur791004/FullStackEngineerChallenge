@@ -1,33 +1,12 @@
 const { ROLES } = require('../../constants/users');
 const db = require('../../db/models');
+const { admin, users } = require('../../db/mockData');
+const generateUser = require('../../db/utils/generateUser');
+const { initMockData, login, getCookieByUser } = require('./utils');
 
 const api = global.createApi('/api/v1/users');
 
-const generateUser = (name, role = ROLES.NORMAL) => ({
-  email: `${name}@test.com`,
-  password: name,
-  role,
-});
-
-const userIds = {
-  admin: null,
-  normal: null,
-};
-
-const cookies = {
-  admin: null,
-  normal: null,
-};
-
-const adminUser = generateUser('admin', ROLES.ADMIN);
-const normalUser = generateUser('normal', ROLES.ADMIN);
-
-const login = async user => {
-  const { email, password } = user;
-  const res = await api.post('/login', { email, password });
-
-  return res;
-};
+const normalUser = users[0];
 
 const createUser = async (user, cookie) => {
   const headers = {};
@@ -51,39 +30,29 @@ const updateUser = async (userId, user, cookie) => {
   return res;
 };
 
-const getCookieByUser = async user => {
-  const { headers } = await login(user);
-
-  return headers['set-cookie'].join(';');
-};
-
-/**
- * Clean and create data for testing
- */
 beforeAll(async () => {
-  await db.sequelize.sync();
-  await db.Users.destroy({ truncate: true });
+  await initMockData();
 
-  userIds.admin = (await db.Users.create(adminUser)).get('id');
-  userIds.normal = (await db.Users.create(normalUser)).get('id');
-
-  cookies.admin = await getCookieByUser(adminUser);
-  cookies.normal = await getCookieByUser(normalUser);
+  /**
+   * Get cookies
+   */
+  admin.cookie = await getCookieByUser(admin);
+  normalUser.cookie = await getCookieByUser(normalUser);
 });
 
 describe('login', () => {
   it('should succeed with correct email and password', async () => {
-    const { status, data } = await login(adminUser);
+    const { status, data } = await login(admin);
 
     expect(status).toBe(200);
     expect(data.data).toMatchObject({
-      email: adminUser.email,
-      role: adminUser.role,
+      email: admin.email,
+      role: admin.role,
     });
   });
 
   it('should fail with wrong password', async () => {
-    const { email } = adminUser;
+    const { email } = admin;
     const password = 'wrong password';
 
     try {
@@ -105,18 +74,23 @@ describe('logout', () => {
 describe('get user list', () => {
   it('should succeed', async () => {
     const { status, data } = await api.get('/');
-    const emails = data.data.map(user => user.email);
+    const mapToId = user => user.id;
+    const ids = data.data.map(mapToId);
 
     expect(status).toBe(200);
-    expect(emails).toEqual([adminUser.email, normalUser.email]);
+    expect(ids).toEqual([admin, ...users].map(mapToId));
   });
 });
 
 describe('create a new user', () => {
   const user = generateUser('new');
 
+  afterEach(async () => {
+    await db.Users.destroy({ where: { id: user.id } });
+  });
+
   it('should succeed with admin user', async () => {
-    const { status, data } = await createUser(user, cookies.admin);
+    const { status, data } = await createUser(user, admin.cookie);
 
     expect(status).toBe(200);
     expect(data.data).toMatchObject({
@@ -127,7 +101,7 @@ describe('create a new user', () => {
 
   it('should fail with normal user', async () => {
     try {
-      await createUser(user, cookies.normal);
+      await createUser(user, normalUser.cookie);
     } catch ({ response: { status } }) {
       expect(status).toBe(403);
     }
@@ -144,11 +118,12 @@ describe('create a new user', () => {
 
 describe('get user by id', () => {
   it('should succeed', async () => {
-    const { status, data } = await api.get(`/${userIds.admin}`);
+    const { status, data } = await api.get(`/${admin.id}`);
 
     expect(status).toBe(200);
     expect(data.data).toMatchObject({
-      email: adminUser.email,
+      id: admin.id,
+      email: admin.email,
     });
   });
 });
@@ -159,21 +134,19 @@ describe('update a user by id', () => {
     role: ROLES.ADMIN,
   };
 
-  let userId = null;
-
-  beforeAll(async () => {
-    userId = (await db.Users.create(user)).get('id');
+  beforeEach(async () => {
+    await db.Users.create(user);
   });
 
-  afterAll(async () => {
-    await db.Users.destroy({ where: { id: userId } });
+  afterEach(async () => {
+    await db.Users.destroy({ where: { id: user.id } });
   });
 
   it('should succeed with admin user', async () => {
     const { status, data } = await updateUser(
-      userId,
+      user.id,
       attrsToBeUpdated,
-      cookies.admin
+      admin.cookie
     );
 
     expect(status).toBe(200);
@@ -184,7 +157,7 @@ describe('update a user by id', () => {
 
   it('should fail with normal user', async () => {
     try {
-      await updateUser(userId, attrsToBeUpdated, cookies.normal);
+      await updateUser(user.id, attrsToBeUpdated, normalUser.cookie);
     } catch ({ response: { status } }) {
       expect(status).toBe(403);
     }
@@ -192,7 +165,7 @@ describe('update a user by id', () => {
 
   it('should fail without login', async () => {
     try {
-      await updateUser(userId, attrsToBeUpdated);
+      await updateUser(user.id, attrsToBeUpdated);
     } catch ({ response: { status } }) {
       expect(status).toBe(401);
     }
@@ -201,16 +174,19 @@ describe('update a user by id', () => {
 
 describe('delete a user by id', () => {
   const user = generateUser('delete');
-  let userId = null;
 
-  beforeAll(async () => {
-    userId = (await db.Users.create(user)).get('id');
+  beforeEach(async () => {
+    await db.Users.create(user);
+  });
+
+  afterEach(async () => {
+    await db.Users.destroy({ where: { id: user.id } });
   });
 
   it('should succeed with admin user', async () => {
-    const { status } = await api.delete(`/${userId}`, {
+    const { status } = await api.delete(`/${user.id}`, {
       headers: {
-        Cookie: cookies.admin,
+        Cookie: admin.cookie,
       },
     });
 
