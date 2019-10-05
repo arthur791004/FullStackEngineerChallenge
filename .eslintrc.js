@@ -28,6 +28,7 @@ const config = {
       },
     ],
     'import/prefer-default-export': 0,
+    'jsx-a11y/no-autofocus': 0,
     'no-continue': 0,
     'no-else-return': 0,
     'no-plusplus': 0,

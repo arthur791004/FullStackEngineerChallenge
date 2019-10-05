@@ -1,3 +1,5 @@
+const path = require('path');
+
 const addDevServer = app => {
   /* eslint-disable global-require, import/no-extraneous-dependencies */
   const webpack = require('webpack');
@@ -17,6 +19,13 @@ const addDevServer = app => {
 
   app.use(webpackDevMiddleware(compiler, options));
   app.use(webpackHotMiddleware(compiler));
+
+  app.get('*', (_, res) => {
+    const filename = path.join(compiler.outputPath, 'index.html');
+    const html = compiler.outputFileSystem.readFileSync(filename);
+
+    res.send(html.toString());
+  });
 };
 
 module.exports = addDevServer;

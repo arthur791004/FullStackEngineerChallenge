@@ -22,6 +22,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   #root {
+    display: flex;
+    flex-direction: column;
     position: relative;
     height: 100%;
     overflow-x: hidden;

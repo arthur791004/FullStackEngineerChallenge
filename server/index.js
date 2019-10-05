@@ -11,10 +11,6 @@ const api = require('./api');
 
 const app = express();
 
-if (process.env.NODE_ENV === 'development') {
-  addDevServer(app);
-}
-
 app.use(bodyParser.json());
 
 app.use(
@@ -34,9 +30,13 @@ app.use('/api', api);
 
 app.use(express.static(buildPath));
 
-app.get('*', (_, res) => {
-  res.sendFile(path.join(buildPath, 'index.html'));
-});
+if (process.env.NODE_ENV === 'development') {
+  addDevServer(app);
+} else {
+  app.get('*', (_, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
 
 /**
  * Error handling
