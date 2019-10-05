@@ -6,16 +6,19 @@ import { initAuthThunk } from './redux/slices/auth';
 import App from './App';
 
 const container = document.getElementById('root');
-const render = async () => {
+const render = () => {
   const app = (
     <Provider store={store}>
       <App />
     </Provider>
   );
 
-  await store.dispatch(initAuthThunk());
-
-  ReactDOM.render(app, container);
+  store
+    .dispatch(initAuthThunk())
+    .catch(() => {})
+    .then(() => {
+      ReactDOM.render(app, container);
+    });
 };
 
 render();

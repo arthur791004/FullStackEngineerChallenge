@@ -4,10 +4,10 @@ import LoginForm from '@/containers/LoginForm';
 
 const Container = styled.div`
   position: relative;
-  top: 30%;
+  top: 10%;
   width: 400px;
-  margin: 0 auto;
-  transform: translateY(-30%);
+  margin: 100px auto;
+  transform: translateY(-10%);
 `;
 
 const LoginPage = () => (

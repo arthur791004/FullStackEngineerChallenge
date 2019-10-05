@@ -1,7 +1,8 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { login } from '@/services/apis/users';
+import { login, logout } from '@/services/apis/users';
 import { getAuthInfo } from '@/services/apis/me';
 import getErrorMessage from '@/utils/getErrorMessage';
+import isAdmin from '@/utils/isAdmin';
 
 const authSlice = createSlice({
   slice: 'auth',
@@ -21,9 +22,9 @@ const authSlice = createSlice({
       isLoading: true,
       error: null,
     }),
-    loginSucceeded: (state, { payload }) => ({
+    loginSucceeded: (state, { payload: { data } }) => ({
       ...state,
-      user: payload,
+      user: data,
       isLoading: false,
       error: null,
     }),
@@ -32,6 +33,10 @@ const authSlice = createSlice({
       user: null,
       isLoading: false,
       error: payload,
+    }),
+    logout: state => ({
+      ...state,
+      user: null,
     }),
   },
 });
@@ -53,6 +58,11 @@ export const selectAuthInfo = createSelector(
     isLoading,
     error,
   })
+);
+
+export const selectIsAdmin = createSelector(
+  selectAuthUser,
+  user => isAdmin(user)
 );
 
 /**
@@ -81,6 +91,18 @@ export const loginThunk = (email, password) => {
     } catch (error) {
       dispatch(authSlice.actions.loginFailed(getErrorMessage(error)));
     }
+  };
+};
+
+export const logoutThunk = () => {
+  return async dispatch => {
+    try {
+      await logout();
+    } catch (error) {
+      // do nothing
+    }
+
+    dispatch(authSlice.actions.logout());
   };
 };
 
