@@ -39,6 +39,7 @@
     "react-dom": "~16.8.6",
     "react-hot-loader": "~4.12.10",
     "react-router-dom": "~5.0.1",
+    "redux-starter-kit": "~0.7.0",
     "sequelize": "~5.19.2",
     "styled-components": "~4.3.2",
     "uuid": "~3.3.3",
