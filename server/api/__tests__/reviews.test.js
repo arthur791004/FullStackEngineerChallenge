@@ -1,5 +1,5 @@
 const db = require('../../db/models');
-const { admin, users } = require('../../db/mockData');
+const { admin, users, reviews } = require('../../db/mockData');
 const generateReview = require('../../db/utils/generateReview');
 const { initMockData, getCookieByUser } = require('./utils');
 
@@ -15,6 +15,23 @@ beforeAll(async () => {
    */
   admin.cookie = await getCookieByUser(admin);
   currentUser.cookie = await getCookieByUser(currentUser);
+});
+
+describe('get review list', () => {
+  it('should succeed', async () => {
+    const { status, data } = await api.get('/', {
+      headers: {
+        Cookie: admin.cookie,
+      },
+    });
+
+    expect(status).toBe(200);
+    expect(data.data).toEqual(
+      expect.arrayContaining(
+        reviews.map(review => expect.objectContaining(review))
+      )
+    );
+  });
 });
 
 describe('create a review', () => {

@@ -7,6 +7,16 @@ const adminPermission = require('../middlewares/permission/admin');
 const router = Router();
 
 /**
+ * Get all reviews (admin only)
+ */
+router.get('/', adminPermission, (req, res, next) => {
+  return Reviews.findAll()
+    .then(reviews => reviews.map(review => review.get()))
+    .then(reviews => res.json({ data: reviews }))
+    .catch(error => next({ message: error.message }));
+});
+
+/**
  * Create a new review (admin only)
  * @param {string} revieweeId - user to be reviewed
  * @param {string} reviewerId - user requested to send a feedback
