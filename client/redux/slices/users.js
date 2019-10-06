@@ -1,5 +1,5 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getUserList } from '@/services/apis/users';
+import { getUserList, createUser } from '@/services/apis/users';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
 
@@ -27,6 +27,14 @@ const usersSlice = createSlice({
       ...state,
       isLoading: false,
       error: getErrorMessage(payload),
+    }),
+    addUser: (state, { payload: { data } }) => ({
+      ...state,
+      list: state.list.concat(data.id),
+      byId: {
+        ...state.byId,
+        [data.id]: data,
+      },
     }),
   },
 });
@@ -65,6 +73,17 @@ export const getUserListThunk = () => {
       dispatch(actions.setList(data));
     } catch (error) {
       dispatch(actions.setError(error));
+    }
+  };
+};
+
+export const createUserThunk = user => {
+  return async dispatch => {
+    try {
+      const { data } = await createUser(user);
+      dispatch(actions.addUser(data));
+    } catch (error) {
+      throw error;
     }
   };
 };

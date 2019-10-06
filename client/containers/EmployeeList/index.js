@@ -13,7 +13,12 @@ import Table, {
   TableRow,
   TableContent,
 } from '@/components/Table';
+import CreateEmployeeButton from './CreateEmployeeButton';
 import Employee from './Employee';
+
+const Headers = styled.div`
+  margin-bottom: 20px;
+`;
 
 const Container = styled.div`
   border-radius: 4px;
@@ -32,6 +37,9 @@ const EmployeeList = () => {
 
   return (
     <Container>
+      <Headers>
+        <CreateEmployeeButton />
+      </Headers>
       <Table>
         <TableHeader>
           <TableRow>

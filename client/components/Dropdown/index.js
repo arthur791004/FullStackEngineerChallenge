@@ -1,11 +1,9 @@
 import React from 'react';
-import { arrayOf, string, shape, func } from 'prop-types';
+import { arrayOf, string, shape, number, oneOf, func } from 'prop-types';
 
-const DEFAULT_MESSAGE = '--- select an employee ---';
-
-const Dropdown = ({ list, handleSelect }) => (
+const Dropdown = ({ list, message, handleSelect }) => (
   <select onChange={handleSelect}>
-    <option>{DEFAULT_MESSAGE}</option>
+    <option>{message}</option>
     {list.map(({ name, value }) => (
       <option key={value} value={value}>
         {name}
@@ -18,10 +16,10 @@ Dropdown.propTypes = {
   list: arrayOf(
     shape({
       name: string.isRequired,
-      value: string.isRequired,
-    })
+      value: oneOf([number, string]).isRequried,
+    }).isRequired
   ).isRequired,
-  selected: string.isRequired,
+  message: string.isRequired,
   handleSelect: func.isRequired,
 };
 

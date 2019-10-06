@@ -66,7 +66,7 @@ router.get('/', (req, res, next) => {
 router.post('/', adminPermission, (req, res, next) => {
   const { email, password, role = ROLES.NORMAL } = req.body;
 
-  return Users.create({ email, password, role })
+  return Users.create({ email, password, role: Number(role) })
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
 });

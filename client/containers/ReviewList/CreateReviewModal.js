@@ -7,6 +7,8 @@ import ModalLabel from '@/components/Modal/ModalLabel';
 import Dropdown from '@/components/Dropdown';
 import Dialog from '@/components/Dialog';
 
+const SELECT_EMPLOYEE_MEESAGE = 'select an employee';
+
 const CreateReviewModal = ({ isOpen, handleClose }) => {
   const dispatch = useDispatch();
   const users = useSelector(selectUserList);
@@ -43,13 +45,13 @@ const CreateReviewModal = ({ isOpen, handleClose }) => {
       <ModalLabel>Choose reviewer</ModalLabel>
       <Dropdown
         list={list}
-        selected={reviewerId}
+        message={SELECT_EMPLOYEE_MEESAGE}
         handleSelect={selectReviewer}
       />
       <ModalLabel>Choose Reviewee</ModalLabel>
       <Dropdown
         list={list}
-        selected={revieweeId}
+        message={SELECT_EMPLOYEE_MEESAGE}
         handleSelect={selectReviewee}
       />
     </Dialog>
