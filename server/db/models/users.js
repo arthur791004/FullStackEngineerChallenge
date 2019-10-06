@@ -4,11 +4,11 @@ const secureUser = require('../utils/secureUser');
 
 module.exports = (sequelize, DataTypes) => {
   class Users extends Sequelize.Model {
-    get(...args) {
-      const user = super.get(...args);
+    get(options) {
+      const user = super.get(options);
 
       // delete password if get all user properties
-      if (args.length === 0) {
+      if (user && user.password) {
         delete user.password;
       }
 
@@ -41,6 +41,18 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
+
+  Users.associate = models => {
+    Users.hasMany(models.Reviews, {
+      as: 'requiringReviews',
+      foreignKey: 'reviewerId',
+    });
+
+    Users.hasMany(models.Reviews, {
+      as: 'feedbacks',
+      foreignKey: 'revieweeId',
+    });
+  };
 
   return Users;
 };
