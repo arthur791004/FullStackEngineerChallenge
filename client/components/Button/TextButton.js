@@ -1,5 +1,5 @@
 import React from 'react';
-import { func, oneOf } from 'prop-types';
+import { oneOf } from 'prop-types';
 import styled from 'styled-components';
 import { sizes } from './utils';
 
@@ -19,13 +19,12 @@ const StyledButton = styled.button`
   }
 `;
 
-const TextButton = ({ handleClick, ...props }) => (
-  <StyledButton {...props} onClick={handleClick} />
+const TextButton = ({ size, ...props }) => (
+  <StyledButton {...props} size={size} />
 );
 
 TextButton.propTypes = {
   size: oneOf(['small', 'medium', 'large']),
-  handleClick: func.isRequired,
 };
 
 TextButton.defaultProps = {

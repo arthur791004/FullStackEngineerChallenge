@@ -2,8 +2,8 @@ import { css } from 'styled-components';
 
 const configs = {
   small: {
-    height: 28,
-    padding: 17,
+    height: 20,
+    padding: 8,
     fontSize: 12,
   },
   medium: {

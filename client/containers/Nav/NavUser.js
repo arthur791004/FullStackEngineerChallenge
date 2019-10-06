@@ -24,7 +24,7 @@ const NavUser = () => {
   return (
     <Container>
       <Text>{user.email}</Text>
-      <TextButton size="small" handleClick={logout}>
+      <TextButton size="small" onClick={logout}>
         Logout
       </TextButton>
     </Container>

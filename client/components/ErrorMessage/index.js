@@ -8,7 +8,9 @@ const Container = styled.div`
   color: ${DANGER};
 `;
 
-const ErrorMessage = ({ children }) => <Container>{children}</Container>;
+const ErrorMessage = ({ children, ...props }) => (
+  <Container {...props}>{children}</Container>
+);
 
 ErrorMessage.propTypes = {
   children: node.isRequired,
