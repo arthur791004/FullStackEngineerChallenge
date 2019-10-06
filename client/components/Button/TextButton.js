@@ -1,6 +1,7 @@
 import React from 'react';
-import { oneOf } from 'prop-types';
+import { string, oneOf } from 'prop-types';
 import styled from 'styled-components';
+import { BLACK } from '@/styles/colors';
 import { sizes } from './utils';
 
 const StyledButton = styled.button`
@@ -8,6 +9,7 @@ const StyledButton = styled.button`
 
   border: none;
   outline: none;
+  color: ${props => props.color};
   background-color: transparent;
   cursor: pointer;
   transition: background-color 0.3s ease-out;
@@ -25,10 +27,12 @@ const TextButton = ({ size, ...props }) => (
 
 TextButton.propTypes = {
   size: oneOf(['small', 'medium', 'large']),
+  color: string,
 };
 
 TextButton.defaultProps = {
   size: 'medium',
+  color: BLACK,
 };
 
 export default TextButton;

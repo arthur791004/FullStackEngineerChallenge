@@ -2,10 +2,12 @@ import { configureStore, getDefaultMiddleware } from 'redux-starter-kit';
 import { combineReducers } from 'redux';
 import auth from './slices/auth';
 import users from './slices/users';
+import reviews from './slices/reviews';
 
 const reducer = combineReducers({
   auth: auth.reducer,
   users: users.reducer,
+  reviews: reviews.reducer,
 });
 
 const middleware = getDefaultMiddleware();

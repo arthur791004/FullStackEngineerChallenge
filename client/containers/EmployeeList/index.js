@@ -7,27 +7,13 @@ import {
   selectError,
   getUserListThunk,
 } from '@/redux/slices/users';
-import { BLACK, LIGHT_WHITE } from '@/styles/colors';
-import { TableRow, TableContent } from './Table';
+import Table, {
+  TableHeader,
+  TableHead,
+  TableRow,
+  TableContent,
+} from '@/components/Table';
 import Employee from './Employee';
-
-const Th = styled.th`
-  padding: 0 16px;
-  text-align: ${props => props.align || 'left'};
-`;
-
-const Thead = styled.thead`
-  color: ${LIGHT_WHITE};
-  background-color: ${BLACK};
-`;
-
-const Table = styled.table`
-  position: relative;
-  min-width: 768px;
-  min-height: 300px;
-  border-spacing: 0;
-  border-collapse: collapse;
-`;
 
 const Container = styled.div`
   border-radius: 4px;
@@ -47,12 +33,12 @@ const EmployeeList = () => {
   return (
     <Container>
       <Table>
-        <Thead>
+        <TableHeader>
           <TableRow>
-            <Th align="left">Email</Th>
-            <Th />
+            <TableHead align="left">Email</TableHead>
+            <TableHead />
           </TableRow>
-        </Thead>
+        </TableHeader>
         <tbody>
           <TableContent isLoading={isLoading} error={error}>
             {userList.map(({ id, email, role }) => (

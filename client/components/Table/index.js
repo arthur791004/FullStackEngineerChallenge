@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { bool, string, node } from 'prop-types';
-import { GRAY } from '@/styles/colors';
+import { BLACK, LIGHT_WHITE, GRAY } from '@/styles/colors';
 import Loading from '@/components/Loading';
 import ErrorMessage from '@/components/ErrorMessage';
 
@@ -55,3 +55,23 @@ TableContent.propTypes = {
   error: string.isRequired,
   children: node.isRequired,
 };
+
+export const TableHead = styled.th`
+  padding: 0 16px;
+  text-align: ${props => props.align || 'left'};
+`;
+
+export const TableHeader = styled.thead`
+  color: ${LIGHT_WHITE};
+  background-color: ${BLACK};
+`;
+
+const Table = styled.table`
+  position: relative;
+  min-width: 768px;
+  min-height: 300px;
+  border-spacing: 0;
+  border-collapse: collapse;
+`;
+
+export default Table;

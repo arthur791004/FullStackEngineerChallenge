@@ -1,10 +1,11 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getUserList } from '@/services/apis/users';
+import { getReviewList } from '@/services/apis/reviews';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
+import { selectUsers } from './users';
 
 const usersSlice = createSlice({
-  slice: 'users',
+  slice: 'reviews',
   initialState: {
     list: [],
     byId: {},
@@ -20,7 +21,7 @@ const usersSlice = createSlice({
     setList: (state, { payload: { data } }) => ({
       ...state,
       isLoading: false,
-      list: data.map(user => user.id),
+      list: data.map(review => review.id),
       byId: normalize(data, 'id'),
     }),
     setError: (state, { payload }) => ({
@@ -34,32 +35,42 @@ const usersSlice = createSlice({
 /**
  * Selectors
  */
-export const selectUsers = state => state.users;
+export const selectReviews = state => state.reviews;
 
-export const selectUserList = createSelector(
+export const selectReviewList = createSelector(
+  selectReviews,
   selectUsers,
-  ({ list, byId }) => list.map(userId => byId[userId])
+  ({ list, byId }, { byId: usersById }) =>
+    list.map(reviewId => {
+      const { reviewerId, revieweeId, ...review } = byId[reviewId];
+
+      return {
+        ...review,
+        reviewer: usersById[reviewerId],
+        reviewee: usersById[revieweeId],
+      };
+    })
 );
 
 export const selectIsLoading = createSelector(
-  selectUsers,
+  selectReviews,
   ({ isLoading }) => isLoading
 );
 
 export const selectError = createSelector(
-  selectUsers,
+  selectReviews,
   ({ error }) => error || ''
 );
 
 /**
  * Thunks
  */
-export const getUserListThunk = () => {
+export const getReviewListThunk = () => {
   return async dispatch => {
     dispatch(usersSlice.actions.getList());
 
     try {
-      const { data } = await getUserList();
+      const { data } = await getReviewList();
       dispatch(usersSlice.actions.setList(data));
     } catch (error) {
       dispatch(usersSlice.actions.setError(getErrorMessage(error)));

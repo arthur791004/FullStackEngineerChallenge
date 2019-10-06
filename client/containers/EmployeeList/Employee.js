@@ -3,7 +3,7 @@ import { string, number } from 'prop-types';
 import isAdmin from '@/utils/isAdmin';
 import TextButton from '@/components/Button/TextButton';
 import Badge from '@/components/Badge';
-import { TableRow, TableData } from './Table';
+import { TableRow, TableData } from '@/components/Table';
 
 const Employee = ({ email, role }) => (
   <TableRow>
