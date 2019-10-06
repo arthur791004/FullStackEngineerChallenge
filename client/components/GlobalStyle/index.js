@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { DARK_WHITE } from '@/styles/colors';
+import { LIGHT_WHITE } from '@/styles/colors';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Helvetica', 'Arial', 'PingFang TC', 'Heiti TC', 'Microsoft Jhenghei', sans-serif;
     font-size: 14px;
-    background-color: ${DARK_WHITE};
+    background-color: ${LIGHT_WHITE};
   }
 
   a {

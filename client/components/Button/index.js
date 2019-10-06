@@ -1,7 +1,8 @@
 import React from 'react';
-import { bool, node } from 'prop-types';
+import { bool, node, oneOf } from 'prop-types';
 import styled, { css } from 'styled-components';
 import { BLACK } from '@/styles/colors';
+import { sizes } from './utils';
 
 const loadingCSS = css`
   opacity: 0.8;
@@ -9,12 +10,9 @@ const loadingCSS = css`
 `;
 
 const StyledButton = styled.button`
+  ${props => sizes(props.size)};
+
   position: relative;
-  height: 42px;
-  padding: 0 25px;
-  border-radius: 21px;
-  line-height: 42px;
-  font-size: 16px;
   color: white;
   background-color: ${BLACK};
   outline: none;
@@ -42,10 +40,12 @@ const Button = ({ children, isLoading, ...props }) => (
 
 Button.propTypes = {
   children: node.isRequired,
+  size: oneOf(['small', 'medium', 'large']),
   isLoading: bool,
 };
 
 Button.defaultProps = {
+  size: 'medium',
   isLoading: false,
 };
 
