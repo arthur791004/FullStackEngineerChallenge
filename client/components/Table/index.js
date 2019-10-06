@@ -7,7 +7,6 @@ import ErrorMessage from '@/components/ErrorMessage';
 
 export const TableRow = styled.tr`
   height: 56px;
-  line-height: 56px;
   border: 1px solid ${GRAY};
   border-top: 0;
 
