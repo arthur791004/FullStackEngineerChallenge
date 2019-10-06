@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { number, bool, func } from 'prop-types';
+import { bool, func } from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { createReviewThunk } from '@/redux/slices/reviews';
 import { selectUserList } from '@/redux/slices/users';
@@ -57,7 +57,6 @@ const CreateReviewModal = ({ isOpen, handleClose }) => {
 };
 
 CreateReviewModal.propTypes = {
-  reviewId: number.isRequired,
   isOpen: bool.isRequired,
   handleClose: func.isRequired,
 };

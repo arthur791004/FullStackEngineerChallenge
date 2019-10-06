@@ -64,10 +64,11 @@ const ReviewList = () => {
             {reviewList.map(({ id, reviewer, reviewee, rating, content }) => (
               <Review
                 key={id}
-                reviewer={reviewer}
-                reviewee={reviewee}
-                rating={rating}
-                feedback={content}
+                reviewId={id}
+                reviewerName={reviewer.email}
+                revieweeName={reviewee.email}
+                rating={rating || 0}
+                content={content || ''}
               />
             ))}
           </TableContent>

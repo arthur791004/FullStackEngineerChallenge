@@ -51,11 +51,15 @@ const Dialog = ({
 Dialog.propTypes = {
   title: string.isRequired,
   children: node.isRequired,
-  disabled: bool.isRequired,
+  disabled: bool,
   confirmText: string.isRequired,
   isOpen: bool.isRequired,
   handleConfirm: func.isRequired,
   handleClose: func.isRequired,
+};
+
+Dialog.defaultProps = {
+  disabled: false,
 };
 
 export default Dialog;
