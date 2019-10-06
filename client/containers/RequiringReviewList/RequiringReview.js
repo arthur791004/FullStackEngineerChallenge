@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { number, string, shape } from 'prop-types';
 import Rating from '@/components/Rating';
 import Card from '@/components/Card';
-import FeedbackButton from './FeedbackButton';
+import DropModal from '@/components/DropModal';
+import Button from '@/components/Button';
+import FeedbackModal from './FeedbackModal';
 
 const Name = styled.div`
   margin: 0px 5px 15px;
@@ -35,7 +37,18 @@ const RequiringReview = ({ reviewId, reviewee, rating, content }) => {
           <Content>{content}</Content>
         </>
       )}
-      <FeedbackButton reviewId={reviewId}>{text}</FeedbackButton>
+      <DropModal>
+        {({ isOpen, handleOpen, handleClose }) => (
+          <>
+            <Button onClick={handleOpen}>{text}</Button>
+            <FeedbackModal
+              reviewId={reviewId}
+              isOpen={isOpen}
+              handleClose={handleClose}
+            />
+          </>
+        )}
+      </DropModal>
     </Container>
   );
 };
