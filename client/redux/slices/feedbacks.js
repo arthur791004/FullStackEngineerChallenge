@@ -26,7 +26,7 @@ const feedbacksSlice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       isLoading: false,
-      error: payload,
+      error: getErrorMessage(payload),
     }),
   },
 });
@@ -58,15 +58,17 @@ export const selectError = createSelector(
 /**
  * Thunks
  */
+const { actions } = feedbacksSlice;
+
 export const getFeedbackListThunk = () => {
   return async dispatch => {
-    dispatch(feedbacksSlice.actions.getList());
+    dispatch(actions.getList());
 
     try {
       const { data } = await getFeedbacks();
-      dispatch(feedbacksSlice.actions.setList(data));
+      dispatch(actions.setList(data));
     } catch (error) {
-      dispatch(feedbacksSlice.actions.setError(getErrorMessage(error)));
+      dispatch(actions.setError(error));
     }
   };
 };

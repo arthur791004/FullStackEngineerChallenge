@@ -20,8 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       rating: DataTypes.INTEGER,
       content: DataTypes.STRING,
-      createdAt: 'TIMESTAMP',
-      updatedAt: 'TIMESTAMP',
+      createdAt: {
+        type: 'TIMESTAMP',
+        defaultValue: () => Date.now(),
+      },
+      updatedAt: {
+        type: 'TIMESTAMP',
+        defaultValue: () => Date.now(),
+      },
     },
     {}
   );

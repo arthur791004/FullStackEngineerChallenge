@@ -27,7 +27,7 @@ const reviewsSlice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       isLoading: false,
-      error: payload,
+      error: getErrorMessage(payload),
     }),
   },
 });
@@ -65,19 +65,19 @@ export const selectError = createSelector(
 /**
  * Thunks
  */
+const { actions } = reviewsSlice;
+
 export const getReviewListThunk = () => {
   return async dispatch => {
-    dispatch(reviewsSlice.actions.getList());
+    dispatch(actions.getList());
 
     try {
       const { data } = await getReviewList();
-      dispatch(reviewsSlice.actions.setList(data));
+      dispatch(actions.setList(data));
     } catch (error) {
-      dispatch(reviewsSlice.actions.setError(getErrorMessage(error)));
+      dispatch(actions.setError(error));
     }
   };
 };
-
-export const getRequiringReviews = () => {};
 
 export default reviewsSlice;

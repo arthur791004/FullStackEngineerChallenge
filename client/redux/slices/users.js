@@ -26,7 +26,7 @@ const usersSlice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       isLoading: false,
-      error: payload,
+      error: getErrorMessage(payload),
     }),
   },
 });
@@ -54,15 +54,17 @@ export const selectError = createSelector(
 /**
  * Thunks
  */
+const { actions } = usersSlice;
+
 export const getUserListThunk = () => {
   return async dispatch => {
-    dispatch(usersSlice.actions.getList());
+    dispatch(actions.getList());
 
     try {
       const { data } = await getUserList();
-      dispatch(usersSlice.actions.setList(data));
+      dispatch(actions.setList(data));
     } catch (error) {
-      dispatch(usersSlice.actions.setError(getErrorMessage(error)));
+      dispatch(actions.setError(error));
     }
   };
 };

@@ -30,7 +30,7 @@ const RequiringReviewList = () => {
       <List isLoading={isLoading} error={error}>
         {requiringReviewList.length > 0 ? (
           requiringReviewList.map(({ id, ...review }) => (
-            <RequiringReview {...review} key={id} />
+            <RequiringReview {...review} reviewId={id} key={id} />
           ))
         ) : (
           <Empty>No reviews need to give feedback</Empty>

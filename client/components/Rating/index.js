@@ -67,7 +67,7 @@ const Rating = ({ rating, size, handleChange }) => (
         key={i}
         size={size}
         isActive={i < rating}
-        onClick={() => handleChange(i)}
+        onClick={() => handleChange(i + 1)}
       />
     ))}
   </Container>
