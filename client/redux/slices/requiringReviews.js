@@ -1,11 +1,10 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getReviewList } from '@/services/apis/reviews';
+import { getRequiringReviews } from '@/services/apis/me';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
-import { selectUsers } from './users';
 
-const reviewsSlice = createSlice({
-  slice: 'reviews',
+const requiringReviewsSlice = createSlice({
+  slice: 'requiringReviews',
   initialState: {
     list: [],
     byId: {},
@@ -35,49 +34,37 @@ const reviewsSlice = createSlice({
 /**
  * Selectors
  */
-export const selectReviews = state => state.reviews;
+export const selectRequiringReviews = state => state.requiringReviews;
 
-export const selectReviewList = createSelector(
-  selectReviews,
-  selectUsers,
-  ({ list, byId }, { byId: usersById }) =>
-    list.map(reviewId => {
-      const { reviewerId, revieweeId, ...review } = byId[reviewId];
-
-      return {
-        ...review,
-        reviewer: usersById[reviewerId],
-        reviewee: usersById[revieweeId],
-      };
-    })
+export const selectRequiringReviewList = createSelector(
+  selectRequiringReviews,
+  ({ list, byId }) => list.map(reviewId => byId[reviewId])
 );
 
 export const selectIsLoading = createSelector(
-  selectReviews,
+  selectRequiringReviews,
   ({ isLoading }) => isLoading
 );
 
 export const selectError = createSelector(
-  selectReviews,
+  selectRequiringReviews,
   ({ error }) => error || ''
 );
 
 /**
  * Thunks
  */
-export const getReviewListThunk = () => {
+export const getRequiringReviewListThunk = () => {
   return async dispatch => {
-    dispatch(reviewsSlice.actions.getList());
+    dispatch(requiringReviewsSlice.actions.getList());
 
     try {
-      const { data } = await getReviewList();
-      dispatch(reviewsSlice.actions.setList(data));
+      const { data } = await getRequiringReviews();
+      dispatch(requiringReviewsSlice.actions.setList(data));
     } catch (error) {
-      dispatch(reviewsSlice.actions.setError(getErrorMessage(error)));
+      dispatch(requiringReviewsSlice.actions.setError(getErrorMessage(error)));
     }
   };
 };
 
-export const getRequiringReviews = () => {};
-
-export default reviewsSlice;
+export default requiringReviewsSlice;

@@ -61,7 +61,7 @@ const Container = styled.div`
 `;
 
 const Rating = ({ rating, size, handleChange }) => (
-  <Container isEditable={!handleChange}>
+  <Container isEditable={!!handleChange}>
     {Array.from({ length: MAX_RATING }, (_, i) => (
       <Star
         key={i}

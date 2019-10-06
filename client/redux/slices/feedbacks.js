@@ -1,11 +1,10 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getReviewList } from '@/services/apis/reviews';
+import { getFeedbacks } from '@/services/apis/me';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
-import { selectUsers } from './users';
 
-const reviewsSlice = createSlice({
-  slice: 'reviews',
+const feedbacksSlice = createSlice({
+  slice: 'feedbacks',
   initialState: {
     list: [],
     byId: {},
@@ -35,49 +34,41 @@ const reviewsSlice = createSlice({
 /**
  * Selectors
  */
-export const selectReviews = state => state.reviews;
+export const selectFeedbacks = state => state.feedbacks;
 
-export const selectReviewList = createSelector(
-  selectReviews,
-  selectUsers,
-  ({ list, byId }, { byId: usersById }) =>
-    list.map(reviewId => {
-      const { reviewerId, revieweeId, ...review } = byId[reviewId];
-
-      return {
-        ...review,
-        reviewer: usersById[reviewerId],
-        reviewee: usersById[revieweeId],
-      };
-    })
+export const selectFeedbackList = createSelector(
+  selectFeedbacks,
+  ({ list, byId }) =>
+    list
+      .map(reviewId => byId[reviewId])
+      // only return reviewer has already gave feedback
+      .filter(({ rating }) => rating > 0)
 );
 
 export const selectIsLoading = createSelector(
-  selectReviews,
+  selectFeedbacks,
   ({ isLoading }) => isLoading
 );
 
 export const selectError = createSelector(
-  selectReviews,
+  selectFeedbacks,
   ({ error }) => error || ''
 );
 
 /**
  * Thunks
  */
-export const getReviewListThunk = () => {
+export const getFeedbackListThunk = () => {
   return async dispatch => {
-    dispatch(reviewsSlice.actions.getList());
+    dispatch(feedbacksSlice.actions.getList());
 
     try {
-      const { data } = await getReviewList();
-      dispatch(reviewsSlice.actions.setList(data));
+      const { data } = await getFeedbacks();
+      dispatch(feedbacksSlice.actions.setList(data));
     } catch (error) {
-      dispatch(reviewsSlice.actions.setError(getErrorMessage(error)));
+      dispatch(feedbacksSlice.actions.setError(getErrorMessage(error)));
     }
   };
 };
 
-export const getRequiringReviews = () => {};
-
-export default reviewsSlice;
+export default feedbacksSlice;
