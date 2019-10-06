@@ -50,7 +50,7 @@ const EmployeeList = () => {
         <tbody>
           <TableContent isLoading={isLoading} error={error}>
             {userList.map(({ id, email, role }) => (
-              <Employee key={id} email={email} role={role} />
+              <Employee key={id} id={id} email={email} role={role} />
             ))}
           </TableContent>
         </tbody>

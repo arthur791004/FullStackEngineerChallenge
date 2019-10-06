@@ -99,7 +99,11 @@ TextField.propTypes = {
   type: string.isRequired,
   name: string.isRequired,
   value: string.isRequired,
-  onChange: func.isRequired,
+  onChange: func,
+};
+
+TextField.defaultProps = {
+  onChange: () => {},
 };
 
 export default TextField;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { arrayOf, string, shape, number, oneOf, func } from 'prop-types';
 
-const Dropdown = ({ list, message, handleSelect }) => (
-  <select onChange={handleSelect}>
+const Dropdown = ({ list, message, handleSelect, ...props }) => (
+  <select onChange={handleSelect} {...props}>
     <option>{message}</option>
     {list.map(({ name, value }) => (
       <option key={value} value={value}>
