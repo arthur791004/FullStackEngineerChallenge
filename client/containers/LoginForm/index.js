@@ -61,7 +61,12 @@ const LoginForm = () => {
       />
       <ErrorMessage>{error || ''}</ErrorMessage>
       <div>
-        <Button type="submit" disabled={disabled} isLoading={isLoading}>
+        <Button
+          type="submit"
+          size="large"
+          disabled={disabled}
+          isLoading={isLoading}
+        >
           Login
         </Button>
       </div>

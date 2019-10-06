@@ -56,7 +56,7 @@ export const selectAuthInfo = createSelector(
   ({ isLoading, error, user }) => ({
     isAuthed: !!user,
     isLoading,
-    error,
+    error: error || '',
   })
 );
 
