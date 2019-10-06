@@ -37,12 +37,16 @@ describe('get requiring reviews', () => {
   it('should succeed', async () => {
     const requiringReviews = reviews
       .filter(review => review.reviewerId === currentUser.id)
-      .map(({ reviewerId, revieweeId, ...review }) =>
-        expect.objectContaining({
+      .map(review => {
+        const { password, ...reviewee } = users.find(
+          user => user.id === review.revieweeId
+        );
+
+        return expect.objectContaining({
           ...review,
-          reviewee: users.find(user => user.id === revieweeId).email,
-        })
-      );
+          reviewee,
+        });
+      });
 
     const { status, data } = await api.get('/requiringReviews', {
       headers: {
@@ -59,12 +63,16 @@ describe('get feedbacks', () => {
   it('should succeed', async () => {
     const feedbacks = reviews
       .filter(review => review.revieweeId === currentUser.id)
-      .map(({ reviewerId, revieweeId, ...review }) =>
-        expect.objectContaining({
+      .map(review => {
+        const { password, ...reviewer } = users.find(
+          user => user.id === review.reviewerId
+        );
+
+        return expect.objectContaining({
           ...review,
-          reviewer: users.find(user => user.id === reviewerId).email,
-        })
-      );
+          reviewer,
+        });
+      });
 
     const { status, data } = await api.get('/feedbacks', {
       headers: {

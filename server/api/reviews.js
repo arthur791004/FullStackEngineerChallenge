@@ -50,7 +50,13 @@ router.post('/:reviewId/feedback', permission(), (req, res, next) => {
       return review;
     })
     .then(review => review.update({ rating, content }))
-    .then(review => res.json({ data: review.get() }))
+    .then(review =>
+      review.getReviewee().then(reviewee => ({
+        ...review.get(),
+        reviewee: reviewee.get(),
+      }))
+    )
+    .then(review => res.json({ data: review }))
     .catch(error => next({ message: error.message }));
 });
 

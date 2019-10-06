@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { sequelize } = require('../db/models');
+const { Reviews, Users } = require('../db/models');
 
 const router = Router();
 
@@ -15,25 +15,21 @@ router.get('/', (req, res) => {
  */
 router.get('/requiringReviews', (req, res, next) => {
   const { id } = req.session.user;
-  const replacements = { reviewerId: id };
-  const type = sequelize.QueryTypes.SELECT;
-  const query = `
-    select
-      Reviews.id as id,
-      Reviews.rating as rating,
-      Reviews.content as content,
-      Reviews.createdAt as createdAt,
-      Reviews.updatedAt as updatedAt,
-      Users.email as reviewee
-    from Reviews
-    left join Users
-    on Reviews.revieweeId = Users.id
-    where Reviews.reviewerId = :reviewerId
-  `;
+  const options = {
+    where: {
+      reviewerId: id,
+    },
+    include: [
+      {
+        model: Users,
+        as: 'reviewee',
+      },
+    ],
+  };
 
-  return sequelize
-    .query(query, { replacements, type })
-    .then(requiringReviews => res.json({ data: requiringReviews }))
+  return Reviews.findAll(options)
+    .then(reviews => reviews.map(review => review.get({ plain: true })))
+    .then(reviews => res.json({ data: reviews }))
     .catch(error => next({ message: error.message }));
 });
 
@@ -42,24 +38,20 @@ router.get('/requiringReviews', (req, res, next) => {
  */
 router.get('/feedbacks', (req, res, next) => {
   const { id } = req.session.user;
-  const replacements = { revieweeId: id };
-  const type = sequelize.QueryTypes.SELECT;
-  const query = `
-    select
-      Reviews.id as id,
-      Reviews.rating as rating,
-      Reviews.content as content,
-      Reviews.createdAt as createdAt,
-      Reviews.updatedAt as updatedAt,
-      Users.email as reviewer
-    from Reviews
-    left join Users
-    on Reviews.reviewerId = Users.id
-    where Reviews.revieweeId = :revieweeId
-  `;
+  const options = {
+    where: {
+      revieweeId: id,
+    },
+    include: [
+      {
+        model: Users,
+        as: 'reviewer',
+      },
+    ],
+  };
 
-  return sequelize
-    .query(query, { replacements, type })
+  return Reviews.findAll(options)
+    .then(feedbacks => feedbacks.map(feedback => feedback.get({ plain: true })))
     .then(feedbacks => res.json({ data: feedbacks }))
     .catch(error => next({ message: error.message }));
 });

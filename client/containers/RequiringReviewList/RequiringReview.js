@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { number, string } from 'prop-types';
+import { number, string, shape } from 'prop-types';
 import Rating from '@/components/Rating';
 import Card from '@/components/Card';
 import FeedbackButton from './FeedbackButton';
@@ -28,7 +28,7 @@ const RequiringReview = ({ reviewId, reviewee, rating, content }) => {
 
   return (
     <Container>
-      <Name>{reviewee}</Name>
+      <Name>{reviewee.email}</Name>
       {isRated && (
         <>
           <Rating rating={rating} />
@@ -42,7 +42,9 @@ const RequiringReview = ({ reviewId, reviewee, rating, content }) => {
 
 RequiringReview.propTypes = {
   reviewId: number.isRequired,
-  reviewee: string.isRequired,
+  reviewee: shape({
+    email: string.isRequired,
+  }).isRequired,
   rating: number.isRequired,
   content: string.isRequired,
 };

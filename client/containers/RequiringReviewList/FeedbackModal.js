@@ -61,13 +61,13 @@ const Content = styled.div`
 const FeedbackModal = ({ reviewId, isOpen, handleClose }) => {
   const dispatch = useDispatch();
   const isSending = useSelector(selectIsSending);
-  const review = useSelector(selectRequiringReview(reviewId));
+  const { reviewee, ...review } = useSelector(selectRequiringReview(reviewId));
   const [rating, setRating] = useState(review.rating);
   const [content, setContent] = useState(review.content);
 
   return (
     <Modal isOpen={isOpen} handleClose={handleClose}>
-      <h2>{`Give Feedback to ${review.reviewee}`}</h2>
+      <h2>{`Give Feedback to ${reviewee.email}`}</h2>
       <Label>Rating</Label>
       <Rating rating={rating} handleChange={setRating} />
       <Label>Reviews</Label>

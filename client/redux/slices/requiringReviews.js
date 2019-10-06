@@ -41,7 +41,7 @@ const requiringReviewsSlice = createSlice({
       isSending: false,
       byId: {
         ...state.byId,
-        [data.id]: Object.assign({}, state.byId[data.id], data),
+        [data.id]: data,
       },
     }),
     sendReviewFailed: (state, { payload }) => ({
