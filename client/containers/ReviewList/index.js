@@ -13,7 +13,14 @@ import Table, {
   TableRow,
   TableContent,
 } from '@/components/Table';
+import DropModal from '@/components/DropModal';
+import Button from '@/components/Button';
+import CreateReviewModal from './CreateReviewModal';
 import Review from './Review';
+
+const Headers = styled.div`
+  margin-bottom: 20px;
+`;
 
 const Container = styled.div`
   border-radius: 4px;
@@ -32,6 +39,16 @@ const ReviewList = () => {
 
   return (
     <Container>
+      <Headers>
+        <DropModal>
+          {({ isOpen, handleOpen, handleClose }) => (
+            <>
+              <Button onClick={handleOpen}>Create Review</Button>
+              <CreateReviewModal isOpen={isOpen} handleClose={handleClose} />
+            </>
+          )}
+        </DropModal>
+      </Headers>
       <Table>
         <TableHeader>
           <TableRow>

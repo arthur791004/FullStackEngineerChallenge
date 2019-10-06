@@ -10,9 +10,7 @@ const requiringReviewsSlice = createSlice({
     list: [],
     byId: {},
     error: null,
-    isLoading: false,
-    isSending: false,
-    sendingError: null,
+    isLoading: true,
   },
   reducers: {
     getList: state => ({
@@ -31,23 +29,12 @@ const requiringReviewsSlice = createSlice({
       isLoading: false,
       error: getErrorMessage(payload),
     }),
-    sendReview: state => ({
-      ...state,
-      isSending: true,
-      sendingError: null,
-    }),
     sendReviewSucceeded: (state, { payload: { data } }) => ({
       ...state,
-      isSending: false,
       byId: {
         ...state.byId,
         [data.id]: data,
       },
-    }),
-    sendReviewFailed: (state, { payload }) => ({
-      ...state,
-      isSending: false,
-      sendingError: getErrorMessage(payload),
     }),
   },
 });
@@ -103,13 +90,11 @@ export const getRequiringReviewListThunk = () => {
 
 export const sendReviewThunk = (reviewId, review) => {
   return async dispatch => {
-    dispatch(actions.sendReview());
-
     try {
       const { data } = await sendReview(reviewId, review);
       dispatch(actions.sendReviewSucceeded(data));
     } catch (error) {
-      dispatch(actions.sendReviewFailed(error));
+      throw error;
     }
   };
 };

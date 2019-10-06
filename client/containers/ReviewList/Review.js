@@ -12,7 +12,7 @@ const Review = ({ reviewer, reviewee, rating, feedback }) => (
     <TableData>
       <Rating rating={rating} />
     </TableData>
-    <TableData>{feedback}</TableData>
+    <TableData maxWidth="300">{feedback}</TableData>
     <TableData align="right">
       <TextButton color={DANGER}>Delete</TextButton>
     </TableData>

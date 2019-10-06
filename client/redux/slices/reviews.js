@@ -1,5 +1,5 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getReviewList } from '@/services/apis/reviews';
+import { getReviewList, createReview } from '@/services/apis/reviews';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
 import { selectUsers } from './users';
@@ -28,6 +28,14 @@ const reviewsSlice = createSlice({
       ...state,
       isLoading: false,
       error: getErrorMessage(payload),
+    }),
+    addReview: (state, { payload: { data } }) => ({
+      ...state,
+      list: [data.id, ...state.list],
+      byId: {
+        ...state.byId,
+        [data.id]: data,
+      },
     }),
   },
 });
@@ -76,6 +84,17 @@ export const getReviewListThunk = () => {
       dispatch(actions.setList(data));
     } catch (error) {
       dispatch(actions.setError(error));
+    }
+  };
+};
+
+export const createReviewThunk = review => {
+  return async dispatch => {
+    try {
+      const { data } = await createReview(review);
+      dispatch(actions.addReview(data));
+    } catch (error) {
+      throw error;
     }
   };
 };

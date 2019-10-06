@@ -9,7 +9,7 @@ const feedbacksSlice = createSlice({
     list: [],
     byId: {},
     error: null,
-    isLoading: false,
+    isLoading: true,
   },
   reducers: {
     getList: state => ({

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const ModalActions = styled.div`
-  margin-top: 20px;
+  margin: 20px 0;
 
   > button + button {
     margin-left: 10px;

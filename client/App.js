@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import GlobalStyle from '@/components/GlobalStyle';
-import Loading from '@/components/Loading';
 import AuthRoute from '@/components/Route/AuthRoute';
 import AuthAdmin from '@/components/Route/AuthAdmin';
 import Nav from '@/containers/Nav';
@@ -15,7 +14,7 @@ const App = () => (
   <BrowserRouter>
     <GlobalStyle />
     <Nav />
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback="">
       <Switch>
         <AuthRoute exact path="/" component={HomePage} />
         <AuthAdmin exact path="/admin" component={AdminPage} />

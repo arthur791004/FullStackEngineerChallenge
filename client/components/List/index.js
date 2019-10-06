@@ -1,11 +1,21 @@
 import React from 'react';
 import { bool, string, node } from 'prop-types';
+import styled from 'styled-components';
 import Loading from '@/components/Loading';
 import ErrorMessage from '@/components/ErrorMessage';
 
+const LoadingContainer = styled.div`
+  position: relative;
+  height: 100px;
+`;
+
 const List = ({ isLoading, error, children }) => {
   if (isLoading) {
-    return <Loading />;
+    return (
+      <LoadingContainer>
+        <Loading />
+      </LoadingContainer>
+    );
   } else if (error) {
     return <ErrorMessage>{error}</ErrorMessage>;
   }
