@@ -8,6 +8,7 @@ import {
   getRequiringReviewListThunk,
 } from '@/redux/slices/requiringReviews';
 import List from '@/components/List';
+import Empty from '@/components/Empty';
 import RequiringReview from './RequiringReview';
 
 const Container = styled.div`
@@ -27,9 +28,13 @@ const RequiringReviewList = () => {
   return (
     <Container>
       <List isLoading={isLoading} error={error}>
-        {requiringReviewList.map(({ id, ...review }) => (
-          <RequiringReview {...review} key={id} />
-        ))}
+        {requiringReviewList.length > 0 ? (
+          requiringReviewList.map(({ id, ...review }) => (
+            <RequiringReview {...review} reviewId={id} key={id} />
+          ))
+        ) : (
+          <Empty>No reviews need to give feedback</Empty>
+        )}
       </List>
     </Container>
   );

@@ -5,6 +5,7 @@ import { DANGER } from '@/styles/colors';
 
 const Container = styled.div`
   height: 30px;
+  line-height: 30px;
   color: ${DANGER};
 `;
 

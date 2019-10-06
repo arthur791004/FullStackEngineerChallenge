@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { number, string } from 'prop-types';
-import Button from '@/components/Button';
+import { number, string, shape } from 'prop-types';
 import Rating from '@/components/Rating';
 import Card from '@/components/Card';
+import DropModal from '@/components/DropModal';
+import Button from '@/components/Button';
+import FeedbackModal from './FeedbackModal';
 
 const Name = styled.div`
   margin: 0px 5px 15px;
@@ -22,25 +24,40 @@ const Container = styled(Card)`
   }
 `;
 
-const RequiringReview = ({ reviewee, rating, content }) => {
-  const isReviewed = rating > 0;
+const RequiringReview = ({ reviewId, reviewee, rating, content }) => {
+  const isRated = rating > 0;
+  const text = isRated ? 'Edit Feedback' : 'Give Feedback';
 
   return (
     <Container>
-      <Name>{reviewee}</Name>
-      {isReviewed && (
+      <Name>{reviewee.email}</Name>
+      {isRated && (
         <>
           <Rating rating={rating} />
           <Content>{content}</Content>
         </>
       )}
-      <Button>{isReviewed ? 'Edit Feedback' : 'Give Feedback'}</Button>
+      <DropModal>
+        {({ isOpen, handleOpen, handleClose }) => (
+          <>
+            <Button onClick={handleOpen}>{text}</Button>
+            <FeedbackModal
+              reviewId={reviewId}
+              isOpen={isOpen}
+              handleClose={handleClose}
+            />
+          </>
+        )}
+      </DropModal>
     </Container>
   );
 };
 
 RequiringReview.propTypes = {
-  reviewee: string.isRequired,
+  reviewId: number.isRequired,
+  reviewee: shape({
+    email: string.isRequired,
+  }).isRequired,
   rating: number.isRequired,
   content: string.isRequired,
 };

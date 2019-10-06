@@ -1,5 +1,6 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
 import { getRequiringReviews } from '@/services/apis/me';
+import { sendReview } from '@/services/apis/reviews';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
 
@@ -9,7 +10,7 @@ const requiringReviewsSlice = createSlice({
     list: [],
     byId: {},
     error: null,
-    isLoading: false,
+    isLoading: true,
   },
   reducers: {
     getList: state => ({
@@ -26,7 +27,14 @@ const requiringReviewsSlice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       isLoading: false,
-      error: payload,
+      error: getErrorMessage(payload),
+    }),
+    sendReviewSucceeded: (state, { payload: { data } }) => ({
+      ...state,
+      byId: {
+        ...state.byId,
+        [data.id]: data,
+      },
     }),
   },
 });
@@ -41,6 +49,12 @@ export const selectRequiringReviewList = createSelector(
   ({ list, byId }) => list.map(reviewId => byId[reviewId])
 );
 
+export const selectRequiringReview = reviewId =>
+  createSelector(
+    selectRequiringReviews,
+    ({ byId }) => byId[reviewId]
+  );
+
 export const selectIsLoading = createSelector(
   selectRequiringReviews,
   ({ isLoading }) => isLoading
@@ -51,18 +65,36 @@ export const selectError = createSelector(
   ({ error }) => error || ''
 );
 
+export const selectIsSending = createSelector(
+  selectRequiringReviews,
+  ({ isSending }) => isSending
+);
+
 /**
  * Thunks
  */
+const { actions } = requiringReviewsSlice;
+
 export const getRequiringReviewListThunk = () => {
   return async dispatch => {
-    dispatch(requiringReviewsSlice.actions.getList());
+    dispatch(actions.getList());
 
     try {
       const { data } = await getRequiringReviews();
-      dispatch(requiringReviewsSlice.actions.setList(data));
+      dispatch(actions.setList(data));
     } catch (error) {
-      dispatch(requiringReviewsSlice.actions.setError(getErrorMessage(error)));
+      dispatch(actions.setError(error));
+    }
+  };
+};
+
+export const sendReviewThunk = (reviewId, review) => {
+  return async dispatch => {
+    try {
+      const { data } = await sendReview(reviewId, review);
+      dispatch(actions.sendReviewSucceeded(data));
+    } catch (error) {
+      throw error;
     }
   };
 };

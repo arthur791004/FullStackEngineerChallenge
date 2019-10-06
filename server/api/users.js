@@ -66,7 +66,7 @@ router.get('/', (req, res, next) => {
 router.post('/', adminPermission, (req, res, next) => {
   const { email, password, role = ROLES.NORMAL } = req.body;
 
-  return Users.create({ email, password, role })
+  return Users.create({ email, password, role: Number(role) })
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
 });
@@ -91,17 +91,10 @@ router.get('/:userId', (req, res, next) => {
  */
 router.patch('/:userId', adminPermission, (req, res, next) => {
   const { userId } = req.params;
-  const attributes = ['password', 'role'];
-  const updatedUser = attributes.reduce((user, attr) => {
-    if (Object.prototype.hasOwnProperty.call(req.body, attr)) {
-      user[attr] = req.body[attr]; // eslint-disable-line no-param-reassign
-    }
-
-    return user;
-  }, {});
+  const { role } = req.body;
 
   return Users.findByPk(userId)
-    .then(user => user.update(updatedUser))
+    .then(user => user.update({ role: Number(role) }))
     .then(user => res.json({ data: user.get() }))
     .catch(error => next({ message: error.message }));
 });

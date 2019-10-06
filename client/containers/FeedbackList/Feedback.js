@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { number, string } from 'prop-types';
+import { number, string, shape } from 'prop-types';
 import Rating from '@/components/Rating';
 import Card from '@/components/Card';
 
@@ -24,7 +24,7 @@ const Container = styled(Card)`
 const Feedback = ({ reviewer, rating, content }) => {
   return (
     <Container>
-      <Name>{reviewer}</Name>
+      <Name>{reviewer.email}</Name>
       <Rating rating={rating} />
       <Content>{content}</Content>
     </Container>
@@ -32,7 +32,9 @@ const Feedback = ({ reviewer, rating, content }) => {
 };
 
 Feedback.propTypes = {
-  reviewer: string.isRequired,
+  reviewer: shape({
+    email: string.isRequired,
+  }).isRequired,
   rating: number.isRequired,
   content: string.isRequired,
 };

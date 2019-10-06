@@ -1,5 +1,5 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getUserList } from '@/services/apis/users';
+import { getUserList, createUser, updateUser } from '@/services/apis/users';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
 
@@ -26,7 +26,22 @@ const usersSlice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       isLoading: false,
-      error: payload,
+      error: getErrorMessage(payload),
+    }),
+    addUser: (state, { payload: { data } }) => ({
+      ...state,
+      list: state.list.concat(data.id),
+      byId: {
+        ...state.byId,
+        [data.id]: data,
+      },
+    }),
+    updateUser: (state, { payload: { data } }) => ({
+      ...state,
+      byId: {
+        ...state.byId,
+        [data.id]: data,
+      },
     }),
   },
 });
@@ -54,15 +69,39 @@ export const selectError = createSelector(
 /**
  * Thunks
  */
+const { actions } = usersSlice;
+
 export const getUserListThunk = () => {
   return async dispatch => {
-    dispatch(usersSlice.actions.getList());
+    dispatch(actions.getList());
 
     try {
       const { data } = await getUserList();
-      dispatch(usersSlice.actions.setList(data));
+      dispatch(actions.setList(data));
     } catch (error) {
-      dispatch(usersSlice.actions.setError(getErrorMessage(error)));
+      dispatch(actions.setError(error));
+    }
+  };
+};
+
+export const createUserThunk = user => {
+  return async dispatch => {
+    try {
+      const { data } = await createUser(user);
+      dispatch(actions.addUser(data));
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const updateUserThunk = (userId, attributes) => {
+  return async dispatch => {
+    try {
+      const { data } = await updateUser(userId, attributes);
+      dispatch(actions.updateUser(data));
+    } catch (error) {
+      throw error;
     }
   };
 };

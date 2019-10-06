@@ -18,10 +18,22 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: 'cascade',
       },
-      rating: DataTypes.INTEGER,
-      content: DataTypes.STRING,
-      createdAt: 'TIMESTAMP',
-      updatedAt: 'TIMESTAMP',
+      rating: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      content: {
+        type: DataTypes.STRING,
+        defaultValue: '',
+      },
+      createdAt: {
+        type: 'TIMESTAMP',
+        defaultValue: () => Date.now(),
+      },
+      updatedAt: {
+        type: 'TIMESTAMP',
+        defaultValue: () => Date.now(),
+      },
     },
     {}
   );

@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { ERROR_MESSAGES } = require('../constants/errors');
+const { MAX_RATING, MIN_RATING } = require('../constants/reviews');
 const { Reviews } = require('../db/models');
 const permission = require('../middlewares/permission');
 const adminPermission = require('../middlewares/permission/admin');
@@ -10,7 +11,11 @@ const router = Router();
  * Get all reviews (admin only)
  */
 router.get('/', adminPermission, (req, res, next) => {
-  return Reviews.findAll()
+  const options = {
+    order: [['updatedAt', 'DESC']],
+  };
+
+  return Reviews.findAll(options)
     .then(reviews => reviews.map(review => review.get()))
     .then(reviews => res.json({ data: reviews }))
     .catch(error => next({ message: error.message }));
@@ -49,8 +54,20 @@ router.post('/:reviewId/feedback', permission(), (req, res, next) => {
 
       return review;
     })
-    .then(review => review.update({ rating, content }))
-    .then(review => res.json({ data: review.get() }))
+    .then(review =>
+      review.update({
+        // ensure rating between the range
+        rating: Math.max(Math.min(MAX_RATING, rating), MIN_RATING),
+        content,
+      })
+    )
+    .then(review =>
+      review.getReviewee().then(reviewee => ({
+        ...review.get(),
+        reviewee: reviewee.get(),
+      }))
+    )
+    .then(review => res.json({ data: review }))
     .catch(error => next({ message: error.message }));
 });
 

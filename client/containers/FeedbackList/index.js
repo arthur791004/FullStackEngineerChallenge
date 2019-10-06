@@ -8,6 +8,7 @@ import {
   getFeedbackListThunk,
 } from '@/redux/slices/feedbacks';
 import List from '@/components/List';
+import Empty from '@/components/Empty';
 import RequiringReview from './Feedback';
 
 const Container = styled.div`
@@ -27,9 +28,13 @@ const FeedbackList = () => {
   return (
     <Container>
       <List isLoading={isLoading} error={error}>
-        {feedbackList.map(({ id, ...review }) => (
-          <RequiringReview {...review} key={id} />
-        ))}
+        {feedbackList.length > 0 ? (
+          feedbackList.map(({ id, ...review }) => (
+            <RequiringReview {...review} key={id} />
+          ))
+        ) : (
+          <Empty>No feedbacks from other employee</Empty>
+        )}
       </List>
     </Container>
   );

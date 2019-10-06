@@ -1,7 +1,4 @@
-const ROLES = {
-  NORMAL: 0,
-  ADMIN: 1,
-};
+import { ROLES } from '@/constants/users';
 
 const isAdmin = user => user && user.role === ROLES.ADMIN;
 

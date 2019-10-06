@@ -1,5 +1,9 @@
 import { createSlice, createSelector } from 'redux-starter-kit';
-import { getReviewList } from '@/services/apis/reviews';
+import {
+  getReviewList,
+  createReview,
+  deleteReview,
+} from '@/services/apis/reviews';
 import normalize from '@/utils/normalize';
 import getErrorMessage from '@/utils/getErrorMessage';
 import { selectUsers } from './users';
@@ -27,7 +31,19 @@ const reviewsSlice = createSlice({
     setError: (state, { payload }) => ({
       ...state,
       isLoading: false,
-      error: payload,
+      error: getErrorMessage(payload),
+    }),
+    addReview: (state, { payload: { data } }) => ({
+      ...state,
+      list: [data.id, ...state.list],
+      byId: {
+        ...state.byId,
+        [data.id]: data,
+      },
+    }),
+    deleteReview: (state, { payload: { data } }) => ({
+      ...state,
+      list: state.list.filter(id => id !== data.id),
     }),
   },
 });
@@ -65,19 +81,41 @@ export const selectError = createSelector(
 /**
  * Thunks
  */
+const { actions } = reviewsSlice;
+
 export const getReviewListThunk = () => {
   return async dispatch => {
-    dispatch(reviewsSlice.actions.getList());
+    dispatch(actions.getList());
 
     try {
       const { data } = await getReviewList();
-      dispatch(reviewsSlice.actions.setList(data));
+      dispatch(actions.setList(data));
     } catch (error) {
-      dispatch(reviewsSlice.actions.setError(getErrorMessage(error)));
+      dispatch(actions.setError(error));
     }
   };
 };
 
-export const getRequiringReviews = () => {};
+export const createReviewThunk = review => {
+  return async dispatch => {
+    try {
+      const { data } = await createReview(review);
+      dispatch(actions.addReview(data));
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+export const deleteReviewThunk = reviewId => {
+  return async dispatch => {
+    try {
+      const { data } = await deleteReview(reviewId);
+      dispatch(actions.deleteReview(data));
+    } catch (error) {
+      throw error;
+    }
+  };
+};
 
 export default reviewsSlice;

@@ -1,13 +1,16 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { bool, string, node } from 'prop-types';
 import { BLACK, LIGHT_WHITE, GRAY } from '@/styles/colors';
 import Loading from '@/components/Loading';
 import ErrorMessage from '@/components/ErrorMessage';
 
+const maxWidthCSS = maxWidth => css`
+  max-width: ${maxWidth}px;
+`;
+
 export const TableRow = styled.tr`
   height: 56px;
-  line-height: 56px;
   border: 1px solid ${GRAY};
   border-top: 0;
 
@@ -19,6 +22,8 @@ export const TableRow = styled.tr`
 export const TableData = styled.td`
   padding: 0 16px;
   text-align: ${props => props.align || 'left'};
+
+  ${({ maxWidth }) => maxWidth && maxWidthCSS(maxWidth)};
 `;
 
 const Error = styled(ErrorMessage)`

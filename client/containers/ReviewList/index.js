@@ -13,7 +13,12 @@ import Table, {
   TableRow,
   TableContent,
 } from '@/components/Table';
+import CreateReviewButton from './CreateReviewButton';
 import Review from './Review';
+
+const Headers = styled.div`
+  margin-bottom: 20px;
+`;
 
 const Container = styled.div`
   border-radius: 4px;
@@ -32,6 +37,9 @@ const ReviewList = () => {
 
   return (
     <Container>
+      <Headers>
+        <CreateReviewButton />
+      </Headers>
       <Table>
         <TableHeader>
           <TableRow>
@@ -47,10 +55,11 @@ const ReviewList = () => {
             {reviewList.map(({ id, reviewer, reviewee, rating, content }) => (
               <Review
                 key={id}
-                reviewer={reviewer}
-                reviewee={reviewee}
-                rating={rating}
-                feedback={content}
+                reviewId={id}
+                reviewerName={reviewer.email}
+                revieweeName={reviewee.email}
+                rating={rating || 0}
+                content={content || ''}
               />
             ))}
           </TableContent>

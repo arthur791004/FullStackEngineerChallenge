@@ -30,8 +30,14 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       role: DataTypes.INTEGER,
-      createdAt: 'TIMESTAMP',
-      updatedAt: 'TIMESTAMP',
+      createdAt: {
+        type: 'TIMESTAMP',
+        defaultValue: () => Date.now(),
+      },
+      updatedAt: {
+        type: 'TIMESTAMP',
+        defaultValue: () => Date.now(),
+      },
     },
     {
       sequelize,
