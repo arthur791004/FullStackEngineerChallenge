@@ -61,15 +61,12 @@ export const selectError = createSelector(
 const { actions } = feedbacksSlice;
 
 export const getFeedbackListThunk = () => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(actions.getList());
 
-    try {
-      const { data } = await getFeedbacks();
-      dispatch(actions.setList(data));
-    } catch (error) {
-      dispatch(actions.setError(error));
-    }
+    return getFeedbacks()
+      .then(({ data }) => dispatch(actions.setList(data)))
+      .catch(error => dispatch(actions.setError(error)));
   };
 };
 

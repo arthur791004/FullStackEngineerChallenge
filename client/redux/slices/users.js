@@ -72,37 +72,26 @@ export const selectError = createSelector(
 const { actions } = usersSlice;
 
 export const getUserListThunk = () => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(actions.getList());
 
-    try {
-      const { data } = await getUserList();
-      dispatch(actions.setList(data));
-    } catch (error) {
-      dispatch(actions.setError(error));
-    }
+    return getUserList()
+      .then(({ data }) => dispatch(actions.setList(data)))
+      .catch(error => dispatch(actions.setError(error)));
   };
 };
 
 export const createUserThunk = user => {
-  return async dispatch => {
-    try {
-      const { data } = await createUser(user);
-      dispatch(actions.addUser(data));
-    } catch (error) {
-      throw error;
-    }
+  return dispatch => {
+    return createUser(user).then(({ data }) => dispatch(actions.addUser(data)));
   };
 };
 
 export const updateUserThunk = (userId, attributes) => {
-  return async dispatch => {
-    try {
-      const { data } = await updateUser(userId, attributes);
-      dispatch(actions.updateUser(data));
-    } catch (error) {
-      throw error;
-    }
+  return dispatch => {
+    return updateUser(userId, attributes).then(({ data }) =>
+      dispatch(actions.updateUser(data))
+    );
   };
 };
 
