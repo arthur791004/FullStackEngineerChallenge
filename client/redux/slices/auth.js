@@ -68,41 +68,33 @@ export const selectIsAdmin = createSelector(
 /**
  * Thunks
  */
-export const initAuthThunk = () => {
-  return async dispatch => {
-    dispatch(authSlice.actions.getAuthInfo());
+const { actions } = authSlice;
 
-    try {
-      const { data } = await getAuthInfo();
-      dispatch(authSlice.actions.loginSucceeded(data));
-    } catch (error) {
-      dispatch(authSlice.actions.loginFailed(null));
-    }
+export const initAuthThunk = () => {
+  return dispatch => {
+    dispatch(actions.getAuthInfo());
+
+    return getAuthInfo()
+      .then(({ data }) => dispatch(actions.loginSucceeded(data)))
+      .catch(() => dispatch(actions.loginFailed(null)));
   };
 };
 
 export const loginThunk = (email, password) => {
-  return async dispatch => {
-    dispatch(authSlice.actions.login());
+  return dispatch => {
+    dispatch(actions.login());
 
-    try {
-      const { data } = await login(email, password);
-      dispatch(authSlice.actions.loginSucceeded(data));
-    } catch (error) {
-      dispatch(authSlice.actions.loginFailed(getErrorMessage(error)));
-    }
+    return login(email, password)
+      .then(({ data }) => dispatch(actions.loginSucceeded(data)))
+      .catch(error => dispatch(actions.loginFailed(getErrorMessage(error))));
   };
 };
 
 export const logoutThunk = () => {
-  return async dispatch => {
-    try {
-      await logout();
-    } catch (error) {
-      // do nothing
-    }
-
-    dispatch(authSlice.actions.logout());
+  return dispatch => {
+    return logout()
+      .catch(() => {})
+      .then(() => dispatch(actions.logout()));
   };
 };
 

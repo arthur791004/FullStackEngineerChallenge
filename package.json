@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development node server",
     "prod": "cross-env NODE_ENV=production node server",
+    "prod:init": "cross-env NODE_ENV=production yarn run db:migrate && cross-env NODE_ENV=production yarn run db:seed",
     "prebuild": "yarn run build:clean",
     "build": "cross-env NODE_ENV=production webpack --config ./internals/webpack/prod.config.js",
     "build:clean": "rimraf ./build",

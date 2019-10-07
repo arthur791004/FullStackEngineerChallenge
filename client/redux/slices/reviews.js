@@ -84,37 +84,28 @@ export const selectError = createSelector(
 const { actions } = reviewsSlice;
 
 export const getReviewListThunk = () => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(actions.getList());
 
-    try {
-      const { data } = await getReviewList();
-      dispatch(actions.setList(data));
-    } catch (error) {
-      dispatch(actions.setError(error));
-    }
+    return getReviewList()
+      .then(({ data }) => dispatch(actions.setList(data)))
+      .catch(error => dispatch(actions.setError(error)));
   };
 };
 
 export const createReviewThunk = review => {
-  return async dispatch => {
-    try {
-      const { data } = await createReview(review);
-      dispatch(actions.addReview(data));
-    } catch (error) {
-      throw error;
-    }
+  return dispatch => {
+    return createReview(review).then(({ data }) =>
+      dispatch(actions.addReview(data))
+    );
   };
 };
 
 export const deleteReviewThunk = reviewId => {
-  return async dispatch => {
-    try {
-      const { data } = await deleteReview(reviewId);
-      dispatch(actions.deleteReview(data));
-    } catch (error) {
-      throw error;
-    }
+  return dispatch => {
+    return deleteReview(reviewId).then(({ data }) =>
+      dispatch(actions.deleteReview(data))
+    );
   };
 };
 

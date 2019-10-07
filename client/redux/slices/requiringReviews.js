@@ -76,26 +76,20 @@ export const selectIsSending = createSelector(
 const { actions } = requiringReviewsSlice;
 
 export const getRequiringReviewListThunk = () => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(actions.getList());
 
-    try {
-      const { data } = await getRequiringReviews();
-      dispatch(actions.setList(data));
-    } catch (error) {
-      dispatch(actions.setError(error));
-    }
+    return getRequiringReviews()
+      .then(({ data }) => dispatch(actions.setList(data)))
+      .catch(error => dispatch(actions.setError(error)));
   };
 };
 
 export const sendReviewThunk = (reviewId, review) => {
-  return async dispatch => {
-    try {
-      const { data } = await sendReview(reviewId, review);
-      dispatch(actions.sendReviewSucceeded(data));
-    } catch (error) {
-      throw error;
-    }
+  return dispatch => {
+    return sendReview(reviewId, review).then(({ data }) =>
+      dispatch(actions.sendReviewSucceeded(data))
+    );
   };
 };
 
